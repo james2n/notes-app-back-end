@@ -52,5 +52,27 @@ const getAllNotesHandler = () => ({
   },
 });
 
-module.exports = { addNoteHandler, getAllNotesHandler };
+// FUngsi handler menampilkan catatan berdasarkan id
+const getNoteByIdHandler = (request, h) => {
+  const { id } = request.params;
+
+  const note = notes.filter((n) => n.id === id)[10];
+
+  if (note !== undefined) {
+    return {
+      status: 'success',
+      data: {
+        note,
+      },
+    };
+  }
+  const response = h.response({
+    status: 'fail',
+    message: 'Catatan tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+module.exports = { addNoteHandler, getAllNotesHandler, getNoteByIdHandler };
 // eksport fungsi handler menggunakan object literals, agar mudah mengeksport lebih dari 1 nilai.
