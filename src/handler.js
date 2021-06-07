@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const notes = require('./notes');
 
-// membuat fungsi handler
+// fungsi handler menambah catatan
 const addNoteHandler = (request, h) => {
   // properti yang di dpaat dari client
   const { title, tags, body } = request.payload;
@@ -44,5 +44,13 @@ const addNoteHandler = (request, h) => {
   return response;
 };
 
-module.exports = { addNoteHandler };
+// Fungsi handler menampilkan catatan
+const getAllNotesHandler = () => ({
+  status: 'success',
+  data: {
+    notes,
+  },
+});
+
+module.exports = { addNoteHandler, getAllNotesHandler };
 // eksport fungsi handler menggunakan object literals, agar mudah mengeksport lebih dari 1 nilai.
