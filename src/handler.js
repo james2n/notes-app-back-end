@@ -112,7 +112,7 @@ const editNoteByIdHandler = (request, h) => {
   return response;
 };
 
-// FUngsi handler untuk menghapus catatan
+//* FUngsi handler untuk menghapus catatan
 const deleteNoteByIdHandler = (request, h) => {
   const { id } = request.params;
 
