@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const notes = require('./notes');
 
-// fungsi handler menambah catatan
+//* fungsi handler menambah catatan
 const addNoteHandler = (request, h) => {
   // properti yang di dpaat dari client
   const { title, tags, body } = request.payload;
@@ -44,7 +44,7 @@ const addNoteHandler = (request, h) => {
   return response;
 };
 
-// Fungsi handler menampilkan catatan
+//* Fungsi handler menampilkan catatan
 const getAllNotesHandler = () => ({
   status: 'success',
   data: {
@@ -52,11 +52,11 @@ const getAllNotesHandler = () => ({
   },
 });
 
-// FUngsi handler menampilkan catatan berdasarkan id
+//* FUngsi handler menampilkan catatan berdasarkan id
 const getNoteByIdHandler = (request, h) => {
   const { id } = request.params;
 
-  const note = notes.filter((n) => n.id === id)[10];
+  const note = notes.filter((n) => n.id === id)[0];
 
   if (note !== undefined) {
     return {
@@ -74,5 +74,48 @@ const getNoteByIdHandler = (request, h) => {
   return response;
 };
 
-module.exports = { addNoteHandler, getAllNotesHandler, getNoteByIdHandler };
+//* Fungsi handler untuk edit catatan berdasarkan ID
+const editNoteByIdHandler = (request, h) => {
+  // untuk mendapatkan nilai id
+  const { id } = request.params;
+  // mendapatkan data notes melalui body request
+  const { title, tags, body } = request.payload;
+  // perbaharui nilai dari updatedAt, karna data sudah di update
+  const updatedAt = new Date().toISOString();
+
+  // dapatkan dulu index array sesuai ID
+  const index = notes.findIndex((note) => note.id === id);
+
+  // cek index yg dicari ditemukan atau tidak
+  if (index !== -1) {
+    notes[index] = {
+      ...notes[index],
+      title,
+      tags,
+      body,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Catatan berhasil diperbaharui',
+    });
+    response.code(200);
+    return response;
+  }
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal meperbarui catatan. ID tidak ditemukan',
+  });
+
+  response.code(404);
+  return response;
+};
+
+module.exports = {
+  addNoteHandler,
+  getAllNotesHandler,
+  getNoteByIdHandler,
+  editNoteByIdHandler,
+};
 // eksport fungsi handler menggunakan object literals, agar mudah mengeksport lebih dari 1 nilai.
